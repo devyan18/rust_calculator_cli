@@ -1,12 +1,13 @@
-use rand::Rng;
 use std::fmt;
 use std::env;
 
+mod rand_number;
+mod types;
+mod calc_matrix;
+
 fn main() {
-
-
     struct Point {
-        x: Vec<Vec<i32>>,
+        x: types::Mx,
     }
 
     impl fmt::Display for Point {
@@ -27,9 +28,31 @@ fn main() {
         let l = args[1].parse::<i32>();
         let m = args[2].parse::<i32>();
 
+        let oper = args[3].parse::<String>();
+
+
         if l.is_ok() && m.is_ok() {
-            let x = Point { x: gen_aleatory_2d_matrix(l.unwrap(), m.unwrap()) };
-            println!("{}", x);
+
+            let ln = l.unwrap();
+            let max = m.unwrap();
+            
+            
+            let mx1 = gen_aleatory_2d_matrix(ln, max);
+            let mx2 = gen_aleatory_2d_matrix(ln, max);
+            
+            let p1 = Point { x: mx1.clone()};
+            let p2 = Point { x: mx2.clone()};
+            
+            let p3: Point;
+
+            if oper == Ok("+".to_string()) {
+                p3 = Point { x: calc_matrix::add_2d(mx1, mx2)};
+                println!("{}\n + \n\n{}\n = \n\n{}", p1, p2, p3);
+            } else {
+                p3 = Point { x: calc_matrix::sub_2d(mx1, mx2)};
+                println!("{}\n + \n\n{}\n = \n\n{}", p1, p2, p3);
+            }
+
         } else {
             println!("Error: Invalid arguments");
         }
@@ -40,25 +63,13 @@ fn main() {
 }
 
 
-fn gen_rand_number(max: i32, zero: bool) -> i32 {
-    let mut rng = rand::thread_rng();
 
-    let number = rng.gen_range(0..max+1);
-    
-    if zero {
-        return number;
-    }else {
-        return number + 1; 
-    }
-}
-
-
-fn gen_aleatory_2d_matrix(len: i32, max: i32) -> Vec<Vec<i32>> {
-    let mut matrix: Vec<Vec<i32>> = Vec::new();
+fn gen_aleatory_2d_matrix(len: i32, max: i32) -> types::Mx {
+    let mut matrix: types::Mx = Vec::new();
     for _ in 0..len {
         let mut row: Vec<i32> = Vec::new();
         for _ in 0..len {
-            row.push(gen_rand_number(max, false));
+            row.push(rand_number::new(max, false));
         }
         matrix.push(row);
     }
