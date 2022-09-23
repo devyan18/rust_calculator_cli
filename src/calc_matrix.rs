@@ -1,6 +1,6 @@
 type Mx = Vec<Vec<i32>>;
 
-pub fn add_2d(m1: Mx, m2: Mx) -> Mx {
+pub fn add_2d(m1: &Mx, m2: &Mx) -> Mx {
     let mut result: Mx = Vec::new();
     for i in 0..m1.len() {
         let mut row: Vec<i32> = Vec::new();
@@ -12,7 +12,7 @@ pub fn add_2d(m1: Mx, m2: Mx) -> Mx {
     result
 }
 
-pub fn sub_2d(m1: Mx, m2: Mx) -> Mx {
+pub fn sub_2d(m1: &Mx, m2: &Mx) -> Mx {
     let mut result: Mx = Vec::new();
     for i in 0..m1.len() {
         let mut row: Vec<i32> = Vec::new();
@@ -24,7 +24,7 @@ pub fn sub_2d(m1: Mx, m2: Mx) -> Mx {
     result
 }
 
-pub fn mult_2d(m1: Mx, m2: Mx) -> Mx {
+pub fn mult_2d(m1: &Mx, m2: &Mx) -> Mx {
     let mut result: Mx = Vec::new();
     for i in 0..m1.len() {
         let mut row: Vec<i32> = Vec::new();

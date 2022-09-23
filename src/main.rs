@@ -1,11 +1,10 @@
-use std::char::ParseCharError;
-use std::num::ParseIntError;
 use std::fmt;
 use std::env;
 
 mod rand_number;
 mod types;
 mod calc_matrix;
+
 
 fn main() {
     struct Point {
@@ -26,53 +25,84 @@ fn main() {
 
     let args: Vec<_> = env::args().collect();
 
-    if args.len() >= 2 {
-        let l: Result<i32, ParseIntError> = args[1].parse::<i32>();
-        let m: Result<i32, ParseIntError> = args[2].parse::<i32>();
 
-        let oper: Result<char, ParseCharError>  = args[3].parse::<char>();
+    if args.len() >= 2 && args[1] == "--rand" {
 
+        let m1:types::Mx = gen_aleatory_2d_matrix(4, 10);
+        let m2:types::Mx = gen_aleatory_2d_matrix(4, 10);
+        
+        let operation: char = '+';
 
-        if l.is_ok() && m.is_ok() {
+        let ans:types::Mx = calc_matrix::add_2d(&m1, &m2);
+        
+        
+        let m1_point: Point = Point { x: m1 };
+        let m2_point: Point = Point { x: m2 };
+        let ans_point: Point = Point { x: ans };
 
-            let ln: i32 = l.unwrap();
-            let max: i32 = m.unwrap();
-            
-            
-            let mx1: Vec<Vec<i32>> = gen_aleatory_2d_matrix(ln, max);
-            let mx2: Vec<Vec<i32>> = gen_aleatory_2d_matrix(ln, max);
-            
-            let p1: Point = Point { x: mx1.clone()};
-            let p2: Point = Point { x: mx2.clone()};
-            
-            let p3: Point;
+        print!("\n");
+        println!("A:\n{}", m1_point);
+        print!("{}\n\n", operation);
+        println!("B:\n{}", m2_point);
+        print!("=\n\n");
+        println!("Result:\n{}", ans_point);
+        return;
+    } else {
 
-            if oper == Ok('+') {
-                p3 = Point { x: calc_matrix::add_2d(mx1, mx2)};
-                println!("{}\n + \n\n{}\n = \n\n{}", p1, p2, p3);
+        let mut len: String = String::new();
+        let mut max: String = String::new();
+
+        println!("Enter the length of the matrix: ");
+
+        std::io::stdin().read_line(&mut len)
+        .ok()
+        .expect("Failed to read line");
+
+        println!("Enter max value in the matrix: ");
+
+        std::io::stdin().read_line(&mut max)
+        .ok()
+        .expect("Failed to read line");
+        
+        let len: i32 = len.trim().parse().unwrap();
+        let max: i32 = max.trim().parse().unwrap();
+
+        let m1:types::Mx = gen_aleatory_2d_matrix(len, max);
+        let m2:types::Mx = gen_aleatory_2d_matrix(len, max);
+
+        println!("Select an operation: \n1. Add (+)\n2. Subtract(-)\n3. Multiply (*)\n");
+
+        let mut operation: String = String::new();
+
+        std::io::stdin().read_line(&mut operation)
+        .ok()
+        .expect("Failed to read operation");
+
+        let ans:types::Mx;
+
+        match operation.trim() {
+            "+" => ans = calc_matrix::add_2d(&m1, &m2),
+            "-" => ans = calc_matrix::sub_2d(&m1, &m2),
+            "*" => ans = calc_matrix::mult_2d(&m1, &m2),
+            _ => {
+                println!("Invalid operation");
                 return;
             }
-
-            if oper == Ok('-'){
-                p3 = Point { x: calc_matrix::sub_2d(mx1, mx2)};
-                println!("{}\n - \n\n{}\n = \n\n{}", p1, p2, p3);
-                return;
-            } 
-
-            if oper == Ok('*'){
-                p3 = Point { x: calc_matrix::mult_2d(mx1, mx2)};
-                println!("{}\n * \n\n{}\n = \n\n{}", p1, p2, p3);
-                return;
-            } 
-
-            println!("Error: Invalid Operation");
-        } else {
-            println!("Error: Invalid arguments");
         }
+
+        let m1_point: Point = Point { x: m1 };
+        let m2_point: Point = Point { x: m2 };
+        let ans_point: Point = Point { x: ans };
         
-    } else {
-        println!("Please enter a number && operator");
+        print!("\n");
+        println!("A:\n{}", m1_point);
+        print!("{}\n\n", operation);
+        println!("B:\n{}", m2_point);
+        print!("=\n\n");
+        println!("Result:\n{}", ans_point);
+        return;
     }
+
 }
 
 
