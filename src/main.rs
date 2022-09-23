@@ -6,22 +6,23 @@ mod types;
 mod calc_matrix;
 
 
-fn main() {
-    struct Point {
-        x: types::Mx,
-    }
+struct Point {
+    x: types::Mx,
+}
 
-    impl fmt::Display for Point {
-        fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-            for i in 0..self.x.len() {
-                for j in 0..self.x[i].len() {
-                    write!(f, "{} ", self.x[i][j])?;
-                }
-                write!(f, "\n")?;
+impl fmt::Display for Point {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        for i in 0..self.x.len() {
+            for j in 0..self.x[i].len() {
+                write!(f, "{} ", self.x[i][j])?;
             }
-            Ok(())
+            write!(f, "\n")?;
         }
+        Ok(())
     }
+}
+
+fn main() {
 
     let args: Vec<_> = env::args().collect();
 
@@ -31,7 +32,7 @@ fn main() {
         let m1:types::Mx = gen_aleatory_2d_matrix(4, 10);
         let m2:types::Mx = gen_aleatory_2d_matrix(4, 10);
         
-        let operation: char = '+';
+        let operation: String = String::from("+");
 
         let ans:types::Mx = calc_matrix::add_2d(&m1, &m2);
         
@@ -40,12 +41,7 @@ fn main() {
         let m2_point: Point = Point { x: m2 };
         let ans_point: Point = Point { x: ans };
 
-        print!("\n");
-        println!("A:\n{}", m1_point);
-        print!("{}\n\n", operation);
-        println!("B:\n{}", m2_point);
-        print!("=\n\n");
-        println!("Result:\n{}", ans_point);
+        print_results(m1_point, m2_point, ans_point, operation, 4);
         return;
     } else {
 
@@ -94,12 +90,7 @@ fn main() {
         let m2_point: Point = Point { x: m2 };
         let ans_point: Point = Point { x: ans };
         
-        print!("\n");
-        println!("A:\n{}", m1_point);
-        print!("{}\n\n", operation);
-        println!("B:\n{}", m2_point);
-        print!("=\n\n");
-        println!("Result:\n{}", ans_point);
+        print_results(m1_point, m2_point, ans_point, operation, len);
         return;
     }
 
@@ -117,4 +108,14 @@ fn gen_aleatory_2d_matrix(len: i32, max: i32) -> types::Mx {
         matrix.push(row);
     }
     matrix
+}
+
+
+fn print_results(m1:Point, m2:Point, ans: Point, operation: String, len: i32) {
+    print!("\n");
+    println!("A: {}x{} \n{}", len, len, m1);
+    print!("{}\n\n", operation);
+    println!("B: {}x{} \n{}", len, len, m2);
+    print!("=\n\n");
+    println!("Result: {}x{} \n{}", len, len, ans);
 }
